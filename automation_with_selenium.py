@@ -12,18 +12,14 @@ driver.get('https://oblumenauense.com.br/')
 
 wait = WebDriverWait(driver, 10)
 
-wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.tdb-head-search-btn')))
-search_dropdown = driver.find_element(By.CSS_SELECTOR, '.tdb-head-search-btn')
+search_dropdown = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.tdb-head-search-btn')))
 search_dropdown.click()    
     
-wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.tdb-head-search-form-input')))    
-search_text = driver.find_element(By.CSS_SELECTOR, '.tdb-head-search-form-input')
+search_text = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.tdb-head-search-form-input')))    
 search_text.send_keys('covid', Keys.ENTER)
     
-wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.tdb-title-text')))
-
 #TODO: pegar a data de publicação também
-news_headlines = driver.find_elements(By.CSS_SELECTOR, '#tdi_76 .entry-title a')
+news_headlines = wait.until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, '#tdi_76 .entry-title a')))
 
 news_list = []
 
@@ -34,7 +30,7 @@ for headline in news_headlines:
 
 driver.get('http://dontpad.com/noticias/oblumenauense/')
 
-text_area = driver.find_element(By.CSS_SELECTOR, '#text')
+text_area = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#text')))
 
 text_area.clear()
 text_area.send_keys("Últimas 10 notícias sobre covid do site OBlumenauense (https://oblumenauense.com.br)\n\n")
