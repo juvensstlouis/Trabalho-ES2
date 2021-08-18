@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from news import News
 
 driver = webdriver.Firefox()
 driver.maximize_window()
@@ -29,14 +30,14 @@ news_list = []
 for headline in news_headlines: 
     title = headline.get_attribute('title')
     url = headline.get_attribute('href')
-    news_list.append("Título: {} \nLink:{}".format(title, url))
+    news_list.append(News(title, url))
 
-driver.get('http://dontpad.com/automation_with_selenium/noticias')
+driver.get('http://dontpad.com/noticias/oblumenauense/')
 
 text_area = driver.find_element(By.CSS_SELECTOR, '#text')
 
 text_area.clear()
-text_area.send_keys("Últimas 10 notícias sobre covid do site OBlumenauense\n\n")
+text_area.send_keys("Últimas 10 notícias sobre covid do site OBlumenauense (https://oblumenauense.com.br)\n\n")
 
 for news in news_list: 
-    text_area.send_keys(news + '\n\n')
+    text_area.send_keys("Título: {} \nLink:{}\n\n".format(news.get_title(), news.get_url()))
