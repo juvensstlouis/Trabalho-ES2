@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from news import News
+from datetime import datetime
 
 try:
     driver = webdriver.Firefox()
@@ -11,7 +12,7 @@ try:
 
     driver.get('https://oblumenauense.com.br/')
 
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 20)
 
     button_search_dropdown = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.tdb-head-search-btn')))
     button_search_dropdown.click()    
@@ -20,14 +21,18 @@ try:
     input_search_text.send_keys('covid', Keys.ENTER)
         
     info_areas = wait.until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, '.tdb_loop .td-module-meta-info')))
-    
+
     news_list = []
 
     for info_area in info_areas: 
         headline = info_area.find_element(By.CSS_SELECTOR, '.entry-title a')
+        info_date = info_area.find_element(By.CSS_SELECTOR, '.entry-date')
+
         title = headline.get_attribute('title')
         url = headline.get_attribute('href')
-        news_list.append(News(title, url, '11/11/1111'))
+        date = info_date.text #info_date.get_atribute('datetime').strftime('%x')
+
+        news_list.append(News(title, url, date))
 
     url_editor = 'iraklis-dokimi'
     edit_code = 'iraklis-dokimi'
@@ -45,11 +50,13 @@ try:
 
     text_area.send_keys(Keys.BACKSPACE)
 
+    nowString = datetime.now().strftime('%d/%m/%Y - %X')
+    text_area.send_keys("Atualizado em: " + nowString, Keys.ENTER)
     text_area.send_keys("Notícia | Data", Keys.ENTER)
     text_area.send_keys("------ | ------", Keys.ENTER)
 
     for news in news_list:
-        row = "[{0}]({1}) | {2}".format(news.title, news.url, news.data)
+        row = "[{0}]({1}) | {2}".format(news.title, news.url, news.date)
         text_area.send_keys(row, Keys.ENTER)
 
     input_edit_code = driver.find_element(By.CSS_SELECTOR, '#id_edit_code')  
