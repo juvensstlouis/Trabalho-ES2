@@ -30,7 +30,7 @@ try:
 
         title = headline.get_attribute('title')
         url = headline.get_attribute('href')
-        date = info_date.text #info_date.get_atribute('datetime').strftime('%x')
+        date = info_date.text
 
         news_list.append(News(title, url, date))
 
