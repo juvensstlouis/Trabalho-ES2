@@ -19,14 +19,12 @@ try:
     input_search_text = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.tdb-head-search-form-input')))    
     input_search_text.send_keys('covid', Keys.ENTER)
         
-    wait.until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, '.tdi_73 > div:nth-child(2)')))
-
-    #TODO: pegar a data de publicação também
-    news_headlines = driver.find_elements(By.CSS_SELECTOR, '#tdi_76 .entry-title a')
-
+    info_areas = wait.until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, '.tdb_loop .td-module-meta-info')))
+    
     news_list = []
 
-    for headline in news_headlines: 
+    for info_area in info_areas: 
+        headline = info_area.find_element(By.CSS_SELECTOR, '.entry-title a')
         title = headline.get_attribute('title')
         url = headline.get_attribute('href')
         news_list.append(News(title, url, '11/11/1111'))
@@ -40,9 +38,9 @@ try:
     button_edit.click() 
 
     text_area = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.CodeMirror-code'))) 
-    text_lines = text_area.find_elements(By.CSS_SELECTOR, '.CodeMirror-line') 
+    number_lines = len(text_area.find_elements(By.CSS_SELECTOR, '.CodeMirror-line span, CodeMirror-line span > *')) 
 
-    for i in range(0, len(text_lines)) :
+    for i in range(0, number_lines) :
         text_area.send_keys(Keys.SHIFT, Keys.ARROW_DOWN)
 
     text_area.send_keys(Keys.BACKSPACE)
