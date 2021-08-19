@@ -6,10 +6,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from news import News
 from datetime import datetime
 
-try:
-    driver = webdriver.Firefox()
-    driver.maximize_window()
-
+def get_news(driver, subject):
+    """"Returns a list of news
+    
+    Get the title, link and publication date from the news related to the subject
+    
+    News extracted from https://oblumenauense.com.br/
+    """
+    
     driver.get('https://oblumenauense.com.br/')
 
     wait = WebDriverWait(driver, 20)
@@ -18,7 +22,7 @@ try:
     button_search_dropdown.click()    
         
     input_search_text = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.tdb-head-search-form-input')))    
-    input_search_text.send_keys('covid', Keys.ENTER)
+    input_search_text.send_keys(subject, Keys.ENTER)
         
     info_areas = wait.until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, '.tdb_loop .td-module-meta-info')))
 
@@ -34,6 +38,15 @@ try:
 
         news_list.append(News(title, url, date))
 
+    return news_list
+
+
+try:
+    driver = webdriver.Firefox()
+    driver.maximize_window()
+
+    news_list = get_news(driver, 'covid')
+    
     url_editor = 'iraklis-dokimi'
     edit_code = 'iraklis-dokimi'
 
